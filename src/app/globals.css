@@ -1,3 +1,17 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-primary-50: #E5F9FC;
+  --color-primary-100: #CCF3F9;
+  --color-primary-200: #99E7F3;
+  --color-primary-300: #66DBED;
+  --color-primary-400: #33CFE7;
+  --color-primary-500: #00CFE4;
+  --color-primary-600: #00A6B6;
+  --color-primary-700: #007C89;
+  --color-primary-800: #00535C;
+  --color-primary-900: #00292E;
+  --color-primary: #00CFE4;
+  
+  --radius: 0.5rem;
+}
