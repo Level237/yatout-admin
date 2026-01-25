@@ -23,15 +23,15 @@ export function LoginForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-5">
       {/* Google Login Button */}
       <Button
         type="button"
         variant="outline"
-        className="w-full"
+        className="w-full h-12 border-gray-200 hover:border-primary hover:bg-primary/5 transition-all duration-300 text-gray-700 font-medium shadow-sm hover:shadow-md"
         onClick={handleGoogleLogin}
       >
-        <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
+        <svg className="mr-2 h-5 w-5" viewBox="0 0 24 24">
           <path
             d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
             fill="#4285F4"
@@ -49,90 +49,110 @@ export function LoginForm() {
             fill="#EA4335"
           />
         </svg>
-        Login with Google
+        Continue with Google
       </Button>
 
       {/* Divider */}
-      <div className="relative">
+      <div className="relative my-6">
         <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t" />
+          <span className="w-full border-t border-gray-200" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background px-2 text-muted-foreground">
-            or Login with Email
+          <span className="bg-white px-3 text-gray-500 font-medium">
+            Or continue with email
           </span>
         </div>
       </div>
 
       {/* Email Field */}
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email" className="text-gray-700 font-medium">
+          Email Address
+        </Label>
         <Input
           id="email"
           type="email"
-          placeholder="E.g. johndoe@email.com"
+          placeholder="you@example.com"
           required
+          className="h-12 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 bg-gray-50/50 hover:bg-white"
         />
       </div>
 
       {/* Password Field */}
       <div className="space-y-2">
-        <Label htmlFor="password">Password</Label>
+        <Label htmlFor="password" className="text-gray-700 font-medium">
+          Password
+        </Label>
         <div className="relative">
           <Input
             id="password"
             type={showPassword ? "text" : "password"}
             placeholder="Enter your password"
             required
-            className="pr-10"
+            className="h-12 pr-12 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 bg-gray-50/50 hover:bg-white"
           />
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary transition-colors duration-200"
           >
             {showPassword ? (
-              <EyeOff className="h-4 w-4" />
+              <EyeOff className="h-5 w-5" />
             ) : (
-              <Eye className="h-4 w-4" />
+              <Eye className="h-5 w-5" />
             )}
           </button>
         </div>
       </div>
 
       {/* Remember Me & Forgot Password */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between pt-1">
         <div className="flex items-center space-x-2">
           <Checkbox
             id="remember"
             checked={rememberMe}
             onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+            className="border-gray-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
           />
           <label
             htmlFor="remember"
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+            className="text-sm text-gray-600 font-medium cursor-pointer select-none hover:text-gray-900 transition-colors"
           >
-            Remember Me
+            Remember me
           </label>
         </div>
         <a
           href="/forgot-password"
-          className="text-sm text-primary hover:underline"
+          className="text-sm text-primary hover:text-primary-600 font-medium transition-colors"
         >
-          Forgot Password?
+          Forgot password?
         </a>
       </div>
 
       {/* Login Button */}
-      <Button type="submit" className="w-full">
-        Login
+      <Button 
+        type="submit" 
+        className="w-full h-12 bg-gradient-to-r from-primary to-primary-600 hover:from-primary-600 hover:to-primary-700 shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 transition-all duration-300 font-semibold text-base mt-6"
+      >
+        Sign In
       </Button>
 
       {/* Create Account Link */}
-      <div className="text-center text-sm">
-        <span className="text-muted-foreground">Not registered yet? </span>
-        <a href="/register" className="text-primary hover:underline">
-          Create an account →
+      <div className="text-center text-sm pt-4">
+        <span className="text-gray-600">Don't have an account? </span>
+        <a 
+          href="/register" 
+          className="text-primary hover:text-primary-600 font-semibold transition-colors inline-flex items-center gap-1 group"
+        >
+          Create account
+          <svg 
+            className="w-4 h-4 transition-transform group-hover:translate-x-1" 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
         </a>
       </div>
     </form>
