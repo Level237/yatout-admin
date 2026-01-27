@@ -1,7 +1,7 @@
 services:
   yatou-app:
     build: .
-    container_name: admin-yatout
+    container_name: admin-yatou
     restart: always
     ports:
       - "3000:3000"
