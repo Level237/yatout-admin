@@ -1,10 +1,10 @@
-import { DashboardLayout } from "@/features/layout";
-import { DashboardPage } from "@/features/dashboard";
+import { DashboardPage } from "@/features/dashboard/components/dashboard";
+import { LayoutContainer } from "@/features/dashboard/components/layout-container";
 
 export default function Dashboard() {
   return (
-    <DashboardLayout title="Dashboard">
+    <LayoutContainer>
       <DashboardPage />
-    </DashboardLayout>
+    </LayoutContainer>
   );
 }
