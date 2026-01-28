@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useMemo } from 'react'
+import { Suspense } from "react";
 import { useSearchParams } from 'next/navigation'
 import {
   Calendar,
@@ -169,7 +170,7 @@ const statusConfig = {
   cancelled: { icon: XCircle, label: 'Annulée', color: 'text-red-600 dark:text-red-400' },
 }
 
-export function ReservationsList() {
+function ReservationListContent() {
   const searchParams = useSearchParams()
   const statusParam = searchParams.get('status') as 'confirmed' | 'pending' | 'cancelled' | null
 
@@ -414,5 +415,13 @@ export function ReservationsList() {
         )}
       </div>
     </div>
+  )
+}
+
+export function ReservationList() {
+  return (
+    <Suspense fallback={<div>Chargement...</div>}>
+      <ReservationListContent />
+    </Suspense>
   )
 }

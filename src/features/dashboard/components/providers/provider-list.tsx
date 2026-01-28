@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Star, MapPin, Phone, Mail, Globe, Heart, MoreVertical, Search, Filter, ChevronDown, Users, Utensils, Building2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-
+import { Suspense } from "react";
 interface Provider {
   id: string
   name: string
@@ -270,7 +270,7 @@ function ProviderCard({ provider, onEdit, onFavorite }: ProviderCardProps) {
   )
 }
 
-export function ProvidersList() {
+function ProvidersListContent() {
   const searchParams = useSearchParams()
   const typeParam = searchParams.get('type') as 'hotel' | 'restaurant' | 'residence' | null
   
@@ -465,5 +465,13 @@ export function ProvidersList() {
         </div>
       </div>
     </div>
+  )
+}
+
+export function ProvidersList() {
+  return (
+    <Suspense fallback={<div>Chargement...</div>}>
+      <ProvidersListContent />
+    </Suspense>
   )
 }
