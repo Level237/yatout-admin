@@ -8,8 +8,6 @@ import {
   Clock,
   User,
   Phone,
-  Mail,
-  MapPin,
   Building2,
   Utensils,
   Home,
@@ -17,11 +15,11 @@ import {
   AlertCircle,
   XCircle,
   Search,
-  Filter,
   Download,
   Eye,
   MoreVertical,
   ChevronDown,
+  Filter
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -153,9 +151,9 @@ const typeIcons = {
 }
 
 const typeColors = {
-  hotel: 'bg-primary/10 text-primary',
-  restaurant: 'bg-secondary/10 text-secondary',
-  residence: 'bg-accent/10 text-accent',
+  hotel: 'bg-violet-500/10 text-violet-600 border-violet-500/20',
+  restaurant: 'bg-blue-500/10 text-blue-600 border-blue-500/20',
+  residence: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20',
 }
 
 const typeLabels = {
@@ -165,9 +163,9 @@ const typeLabels = {
 }
 
 const statusConfig = {
-  confirmed: { icon: CheckCircle, label: 'Confirmée', color: 'text-green-600 dark:text-green-400' },
-  pending: { icon: AlertCircle, label: 'En attente', color: 'text-yellow-600 dark:text-yellow-400' },
-  cancelled: { icon: XCircle, label: 'Annulée', color: 'text-red-600 dark:text-red-400' },
+  confirmed: { icon: CheckCircle, label: 'Confirmée', color: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20' },
+  pending: { icon: AlertCircle, label: 'En attente', color: 'bg-amber-500/10 text-amber-600 border-amber-500/20' },
+  cancelled: { icon: XCircle, label: 'Annulée', color: 'bg-rose-500/10 text-rose-600 border-rose-500/20' },
 }
 
 function ReservationListContent() {
@@ -198,219 +196,226 @@ function ReservationListContent() {
   }
 
   return (
-    <div className="w-full h-full flex flex-col overflow-hidden">
-      {/* Header */}
-      <div className="border-b border-border bg-card/50 backdrop-blur-sm">
-        <div className="p-4 sm:p-6 space-y-4">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Réservations</h1>
-              {statusParam && (
-                <span className={cn('px-3 py-1 rounded-lg text-xs sm:text-sm font-semibold', 'bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400')}>
-                  {filteredReservations.length} résultat{filteredReservations.length > 1 ? 's' : ''}
-                </span>
-              )}
-            </div>
-            <p className="text-sm text-muted-foreground mt-1">Gérez et suivez toutes les réservations de vos prestataires</p>
+    <div className="w-full flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      {/* Header Area */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+          <div className="flex items-center gap-3 mb-2">
+            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">Réservations</h1>
+            <span className="px-3 py-1 rounded-xl text-xs font-bold bg-primary/10 text-primary border border-primary/20 shadow-sm">
+              {stats.total} total
+            </span>
           </div>
+          <p className="text-muted-foreground font-medium">Gérez le flux des réservations sur toute la plateforme YaTout</p>
+        </div>
 
-          {statusParam && (
-            <div className="flex items-center gap-2">
-              <p className="text-sm text-muted-foreground">Filtre actif :</p>
-              <a href="/reservations" className="inline-flex items-center gap-2 px-3 py-1 bg-muted hover:bg-muted/80 rounded-lg text-sm font-medium text-foreground transition-colors">
-                Voir toutes les réservations
-              </a>
-            </div>
-          )}
+        <div className="flex gap-2">
+          <button className="flex items-center justify-center gap-2 px-4 py-2.5 bg-muted/50 text-foreground border border-border/50 rounded-xl hover:bg-muted/80 transition-colors font-semibold text-sm shadow-sm backdrop-blur-md">
+            <Download className="w-4 h-4" />
+            Exporter CSV
+          </button>
+        </div>
+      </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
-            <div className="bg-muted rounded-lg p-2 sm:p-3 text-center">
-              <p className="text-xs sm:text-sm text-muted-foreground">Total</p>
-              <p className="text-lg sm:text-xl font-bold text-foreground">{stats.total}</p>
-            </div>
-            <div className="bg-green-100/50 dark:bg-green-900/20 rounded-lg p-2 sm:p-3 text-center">
-              <p className="text-xs sm:text-sm text-green-700 dark:text-green-400">Confirmées</p>
-              <p className="text-lg sm:text-xl font-bold text-green-700 dark:text-green-400">{stats.confirmed}</p>
-            </div>
-            <div className="bg-yellow-100/50 dark:bg-yellow-900/20 rounded-lg p-2 sm:p-3 text-center">
-              <p className="text-xs sm:text-sm text-yellow-700 dark:text-yellow-400">En attente</p>
-              <p className="text-lg sm:text-xl font-bold text-yellow-700 dark:text-yellow-400">{stats.pending}</p>
-            </div>
-            <div className="bg-red-100/50 dark:bg-red-900/20 rounded-lg p-2 sm:p-3 text-center">
-              <p className="text-xs sm:text-sm text-red-700 dark:text-red-400">Annulées</p>
-              <p className="text-lg sm:text-xl font-bold text-red-700 dark:text-red-400">{stats.cancelled}</p>
-            </div>
+      {/* Stats Summary */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {[
+          { label: 'Total', value: stats.total, color: 'text-foreground', bg: 'bg-muted/40' },
+          { label: 'Confirmées', value: stats.confirmed, color: 'text-emerald-500', bg: 'bg-emerald-500/5', border: 'border-emerald-500/20' },
+          { label: 'En attente', value: stats.pending, color: 'text-amber-500', bg: 'bg-amber-500/5', border: 'border-amber-500/20' },
+          { label: 'Annulées', value: stats.cancelled, color: 'text-rose-500', bg: 'bg-rose-500/5', border: 'border-rose-500/20' }
+        ].map((stat) => (
+          <div key={stat.label} className={cn("p-5 rounded-3xl border border-border/50 backdrop-blur-xl shadow-sm", stat.bg, stat.border)}>
+            <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1">{stat.label}</p>
+            <p className={cn("text-3xl font-extrabold", stat.color)}>{stat.value}</p>
           </div>
+        ))}
+      </div>
 
-          {/* Filters */}
-          <div className="flex flex-col sm:flex-row gap-3 items-center justify-between">
-            <div className="w-full sm:flex-1 flex items-center gap-2 bg-muted rounded-lg px-3 py-2">
-              <Search className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-              <input
-                type="text"
-                placeholder="Rechercher par client, numéro..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="flex-1 bg-transparent text-sm text-foreground placeholder-muted-foreground focus:outline-none"
-              />
-            </div>
+      {/* Control Bar */}
+      <div className="bg-background/60 backdrop-blur-xl border border-border/50 rounded-3xl p-3 sm:p-4 flex flex-col sm:flex-row gap-3 shadow-sm justify-between">
+        <label className="relative flex-1 group max-w-md">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+          <input
+            type="text"
+            placeholder="Rechercher par client, email, référence..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-12 pr-4 py-3 bg-muted/40 hover:bg-muted/60 focus:bg-background border border-border/50 focus:border-primary/30 rounded-2xl text-sm font-medium focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all text-foreground"
+          />
+        </label>
 
-            <div className="w-full sm:w-auto flex gap-2 sm:gap-3 items-center">
-              <select
-                value={statusParam || selectedStatus}
-                onChange={(e) => {
-                  const value = e.target.value
-                  if (value === 'all') {
-                    window.location.href = '/reservations'
-                  } else {
-                    window.location.href = `/reservations?status=${value}`
-                  }
-                }}
-                className="flex-1 sm:flex-none px-3 py-2 bg-muted border border-border rounded-lg text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-all appearance-none cursor-pointer"
-              >
-                <option value="all">Tous les statuts</option>
-                <option value="confirmed">Confirmées</option>
-                <option value="pending">En attente</option>
-                <option value="cancelled">Annulées</option>
-              </select>
+        <div className="flex gap-3 items-center">
+          <label className="relative w-full sm:w-48 group">
+            <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <select
+              value={statusParam || selectedStatus}
+              onChange={(e) => {
+                const value = e.target.value
+                window.location.href = value === 'all' ? '/reservations' : `/reservations?status=${value}`
+              }}
+              className="w-full pl-11 pr-10 py-3 bg-muted/40 hover:bg-muted/60 border border-border/50 rounded-2xl text-sm font-medium focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all appearance-none cursor-pointer text-foreground"
+            >
+              <option value="all">Tous les statuts</option>
+              <option value="confirmed">Confirmées</option>
+              <option value="pending">En attente</option>
+              <option value="cancelled">Annulées</option>
+            </select>
+            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+          </label>
 
-              <button className="hidden sm:flex items-center gap-2 px-3 py-2 bg-muted hover:bg-muted/80 rounded-lg text-sm font-medium text-foreground transition-colors">
-                <Download className="w-4 h-4" />
-              </button>
-
-              <div className="hidden sm:flex items-center gap-1 bg-muted rounded-lg p-1">
-                <button onClick={() => setViewMode('table')} className={cn('px-3 py-1.5 rounded text-sm font-medium transition-colors', viewMode === 'table' ? 'bg-card text-foreground' : 'text-muted-foreground hover:text-foreground')}>
-                  Tableau
-                </button>
-                <button onClick={() => setViewMode('cards')} className={cn('px-3 py-1.5 rounded text-sm font-medium transition-colors', viewMode === 'cards' ? 'bg-card text-foreground' : 'text-muted-foreground hover:text-foreground')}>
-                  Cartes
-                </button>
-              </div>
-            </div>
+          <div className="flex p-1 bg-muted/40 border border-border/50 rounded-xl">
+            <button
+              onClick={() => setViewMode('table')}
+              className={cn('px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition-all duration-300', viewMode === 'table' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground')}
+            >
+              LiSTE
+            </button>
+            <button
+              onClick={() => setViewMode('cards')}
+              className={cn('px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition-all duration-300', viewMode === 'cards' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground')}
+            >
+              Cartes
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 overflow-y-auto">
-        {viewMode === 'table' ? (
-          // Table View
-          <div className="p-4 sm:p-6">
-            <div className="bg-card rounded-lg sm:rounded-xl border border-border overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-xs sm:text-sm">
-                  <thead>
-                    <tr className="border-b border-border bg-muted/50">
-                      <th className="text-left py-3 px-2 sm:px-4 font-semibold text-foreground">Numéro</th>
-                      <th className="text-left py-3 px-2 sm:px-4 font-semibold text-foreground hidden md:table-cell">Client</th>
-                      <th className="text-left py-3 px-2 sm:px-4 font-semibold text-foreground hidden lg:table-cell">Prestataire</th>
-                      <th className="text-left py-3 px-2 sm:px-4 font-semibold text-foreground hidden sm:table-cell">Dates</th>
-                      <th className="text-left py-3 px-2 sm:px-4 font-semibold text-foreground">Montant</th>
-                      <th className="text-left py-3 px-2 sm:px-4 font-semibold text-foreground">Statut</th>
-                      <th className="text-center py-3 px-2 sm:px-4 font-semibold text-foreground">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredReservations.map((res) => {
-                      const StatusIcon = statusConfig[res.status].icon
-                      return (
-                        <tr key={res.id} className="border-b border-border hover:bg-muted/50 transition-colors">
-                          <td className="py-3 px-2 sm:px-4 font-medium text-foreground">{res.reservationNumber}</td>
-                          <td className="py-3 px-2 sm:px-4 text-foreground hidden md:table-cell">{res.clientName}</td>
-                          <td className="py-3 px-2 sm:px-4 hidden lg:table-cell">
-                            <div className="flex items-center gap-2">
-                              <span className={cn('p-1 rounded', typeColors[res.providerType])}>{typeIcons[res.providerType]}</span>
-                              <span className="text-foreground">{res.providerName}</span>
-                            </div>
-                          </td>
-                          <td className="py-3 px-2 sm:px-4 text-muted-foreground hidden sm:table-cell text-xs">
+      {/* Grid or Table Content */}
+      <div className="pb-12">
+        {filteredReservations.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-20 bg-background/60 backdrop-blur-xl border border-border/50 rounded-3xl border-dashed">
+            <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mb-6">
+              <Search className="w-8 h-8 text-muted-foreground" />
+            </div>
+            <h3 className="text-xl font-bold tracking-tight text-foreground mb-2">Aucune réservation trouvée</h3>
+            <p className="text-muted-foreground max-w-sm text-center font-medium">
+              Ajustez vos filtres pour voir d'autres résultats.
+            </p>
+          </div>
+        ) : viewMode === 'table' ? (
+          <div className="bg-background/60 backdrop-blur-xl border border-border/50 rounded-3xl overflow-hidden shadow-sm">
+            <div className="overflow-x-auto custom-scrollbar">
+              <table className="w-full text-sm text-left">
+                <thead>
+                  <tr className="border-b border-border/50 bg-muted/20">
+                    <th className="py-4 px-6 font-semibold text-muted-foreground whitespace-nowrap">Référence</th>
+                    <th className="py-4 px-6 font-semibold text-muted-foreground whitespace-nowrap">Client</th>
+                    <th className="py-4 px-6 font-semibold text-muted-foreground whitespace-nowrap">Prestataire</th>
+                    <th className="py-4 px-6 font-semibold text-muted-foreground whitespace-nowrap">Dates</th>
+                    <th className="py-4 px-6 font-semibold text-muted-foreground text-right whitespace-nowrap">Montant</th>
+                    <th className="py-4 px-6 font-semibold text-muted-foreground text-center whitespace-nowrap">Statut</th>
+                    <th className="py-4 px-6 font-semibold text-muted-foreground text-center whitespace-nowrap w-16">Act</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredReservations.map((res) => {
+                    return (
+                      <tr key={res.id} className="border-b border-border/30 last:border-0 hover:bg-muted/30 transition-colors group">
+                        <td className="py-4 px-6 whitespace-nowrap">
+                          <span className="font-bold text-foreground font-mono bg-muted/50 px-2 py-1 rounded-md text-xs">{res.reservationNumber}</span>
+                        </td>
+                        <td className="py-4 px-6 whitespace-nowrap">
+                          <span className="font-bold text-foreground block">{res.clientName}</span>
+                          <span className="text-xs font-medium text-muted-foreground">{res.clientEmail}</span>
+                        </td>
+                        <td className="py-4 px-6 whitespace-nowrap">
+                          <div className="flex items-center gap-2">
+                            <span className={cn('p-1.5 rounded-lg border shadow-sm', typeColors[res.providerType])}>{typeIcons[res.providerType]}</span>
+                            <span className="font-semibold text-foreground">{res.providerName}</span>
+                          </div>
+                        </td>
+                        <td className="py-4 px-6 whitespace-nowrap">
+                          <span className="text-sm font-medium text-foreground">
                             {new Date(res.checkInDate).toLocaleDateString('fr-FR', { month: 'short', day: 'numeric' })}
-                          </td>
-                          <td className="py-3 px-2 sm:px-4 font-semibold text-foreground">{res.totalAmount} €</td>
-                          <td className="py-3 px-2 sm:px-4">
-                            <div className="flex items-center gap-1">
-                              <StatusIcon className={cn('w-4 h-4', statusConfig[res.status].color)} />
-                              <span className={cn('text-xs font-medium', statusConfig[res.status].color)}>{statusConfig[res.status].label}</span>
-                            </div>
-                          </td>
-                          <td className="py-3 px-2 sm:px-4 text-center">
-                            <button className="text-muted-foreground hover:text-foreground transition-colors p-1">
-                              <Eye className="w-4 h-4" />
-                            </button>
-                          </td>
-                        </tr>
-                      )
-                    })}
-                  </tbody>
-                </table>
-              </div>
+                          </span>
+                          {res.nights ? <span className="text-xs text-muted-foreground ml-1">({res.nights} Nuits)</span> : ''}
+                        </td>
+                        <td className="py-4 px-6 whitespace-nowrap text-right">
+                          <span className="font-extrabold text-foreground text-base">{res.totalAmount} €</span>
+                        </td>
+                        <td className="py-4 px-6 whitespace-nowrap text-center">
+                          <span className={cn('inline-flex items-center justify-center px-2.5 py-1.5 text-[10px] uppercase tracking-widest font-extrabold rounded-xl border', statusConfig[res.status].color)}>
+                            {statusConfig[res.status].label}
+                          </span>
+                        </td>
+                        <td className="py-4 px-6 whitespace-nowrap text-center">
+                          <button className="p-2 text-muted-foreground hover:bg-primary/10 hover:text-primary rounded-xl transition-colors">
+                            <MoreVertical className="w-5 h-5" />
+                          </button>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
             </div>
           </div>
         ) : (
-          // Cards View
-          <div className="p-4 sm:p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {filteredReservations.map((res) => {
-                const StatusIcon = statusConfig[res.status].icon
-                return (
-                  <div key={res.id} className="bg-card rounded-lg sm:rounded-xl border border-border p-4 sm:p-6 hover:shadow-lg hover:border-border/60 transition-all duration-200">
-                    <div className="flex items-start justify-between mb-4">
-                      <div>
-                        <p className="text-xs sm:text-sm text-muted-foreground">{res.reservationNumber}</p>
-                        <h3 className="text-base sm:text-lg font-bold text-foreground mt-1">{res.clientName}</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredReservations.map((res) => {
+              const StatusIcon = statusConfig[res.status].icon
+              return (
+                <div key={res.id} className="bg-background/60 backdrop-blur-xl border border-border/50 rounded-3xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+                  <div className="flex items-start justify-between mb-5">
+                    <div>
+                      <span className="text-xs font-bold text-muted-foreground font-mono bg-muted/50 px-2 py-1 rounded-md">{res.reservationNumber}</span>
+                      <h3 className="text-xl font-extrabold text-foreground mt-3 leading-tight">{res.clientName}</h3>
+                    </div>
+                    <span className={cn('inline-flex items-center justify-center p-2 rounded-xl border', statusConfig[res.status].color)}>
+                      <StatusIcon className="w-5 h-5" />
+                    </span>
+                  </div>
+
+                  <div className="space-y-4 mb-6 pt-4 border-t border-border/50">
+                    <div className="flex items-start gap-3">
+                      <div className="bg-muted p-2 rounded-xl border border-border/50">
+                        <Building2 className="w-4 h-4 text-foreground/70" />
                       </div>
-                      <div className="flex items-center gap-1">
-                        <StatusIcon className={cn('w-5 h-5', statusConfig[res.status].color)} />
+                      <div>
+                        <p className="font-semibold text-foreground text-sm">{res.providerName}</p>
+                        <span className={cn('inline-block mt-1 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase border', typeColors[res.providerType])}>
+                          {typeLabels[res.providerType]}
+                        </span>
                       </div>
                     </div>
 
-                    <div className="space-y-3 mb-4">
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Building2 className="w-4 h-4 flex-shrink-0" />
-                        <span>{res.providerName}</span>
-                        <span className={cn('px-2 py-0.5 rounded text-xs font-semibold', typeColors[res.providerType])}>{typeLabels[res.providerType]}</span>
+                    <div className="flex items-start gap-3">
+                      <div className="bg-muted p-2 rounded-xl border border-border/50">
+                        {res.nights ? <Calendar className="w-4 h-4 text-foreground/70" /> : <Clock className="w-4 h-4 text-foreground/70" />}
                       </div>
-
-                      {res.nights ? (
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <Calendar className="w-4 h-4 flex-shrink-0" />
-                          <span>
-                            {new Date(res.checkInDate).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' })} au{' '}
-                            {new Date(res.checkOutDate).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' })} ({res.nights}N)
-                          </span>
-                        </div>
-                      ) : (
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <Clock className="w-4 h-4 flex-shrink-0" />
-                          <span>{new Date(res.checkInDate).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' })}</span>
-                        </div>
-                      )}
-
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <User className="w-4 h-4 flex-shrink-0" />
-                        <span>{res.guests} client{res.guests > 1 ? 's' : ''}</span>
-                      </div>
-
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Phone className="w-4 h-4 flex-shrink-0" />
-                        <span>{res.clientPhone}</span>
+                      <div>
+                        {res.nights ? (
+                          <p className="font-semibold text-foreground text-sm">
+                            {new Date(res.checkInDate).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long' })}
+                          </p>
+                        ) : (
+                          <p className="font-semibold text-foreground text-sm">
+                            Le {new Date(res.checkInDate).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long' })}
+                          </p>
+                        )}
+                        <p className="text-xs font-medium text-muted-foreground mt-0.5">{res.guests} personne{res.guests > 1 ? 's' : ''}</p>
                       </div>
                     </div>
 
-                    <div className="border-t border-border pt-4 flex items-end justify-between">
-                      <div>
-                        <p className="text-xs text-muted-foreground">Montant total</p>
-                        <p className="text-lg sm:text-xl font-bold text-foreground">{res.totalAmount} €</p>
-                      </div>
-                      <button className="text-muted-foreground hover:text-foreground transition-colors p-2">
-                        <MoreVertical className="w-5 h-5" />
-                      </button>
+                    <div className="flex items-center gap-2.5 px-3 py-2 bg-muted/40 rounded-xl border border-border/50">
+                      <Phone className="w-4 h-4 text-primary" />
+                      <span className="truncate font-medium text-foreground text-xs">{res.clientPhone}</span>
                     </div>
                   </div>
-                )
-              })}
-            </div>
+
+                  <div className="bg-gradient-to-tr from-muted/50 to-background rounded-2xl p-4 border border-border/50 flex items-center justify-between">
+                    <div>
+                      <p className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-widest mb-1">Montant payé</p>
+                      <p className="text-2xl font-extrabold text-foreground leading-none">{res.totalAmount} €</p>
+                    </div>
+                    <button className="w-10 h-10 bg-primary text-primary-foreground rounded-xl flex items-center justify-center hover:bg-primary/90 transition-colors shadow-sm">
+                      <ArrowRight className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+              )
+            })}
           </div>
         )}
       </div>
@@ -418,9 +423,18 @@ function ReservationListContent() {
   )
 }
 
+function ArrowRight(props: any) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M5 12h14"></path>
+      <path d="m12 5 7 7-7 7"></path>
+    </svg>
+  )
+}
+
 export function ReservationList() {
   return (
-    <Suspense fallback={<div>Chargement...</div>}>
+    <Suspense fallback={<div className="p-8 text-center text-muted-foreground animate-pulse">Chargement de la vue premium...</div>}>
       <ReservationListContent />
     </Suspense>
   )
